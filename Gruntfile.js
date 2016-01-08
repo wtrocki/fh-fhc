@@ -14,12 +14,13 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    _test_runner: './node_modules/.bin/turbo',
-    _unit_args: '--setUp ./test/setupTeardown.js --tearDown ./test/setupTeardown.js test/unit',
-    _accept_args: 'test/accept/*',
-    unit: ['env NODE_PATH=.:./lib <%= _test_runner %> <%= _unit_args %>/fh3/**/*',
-      'env NODE_PATH=.:./lib <%= _test_runner %> <%= _unit_args %>/legacy/*'],
+    _test_runner: '_mocha',
+    _unit_args: '-A -u exports --recursive -t 10000 ./test/setupTeardown.js ./test/unit',
+    _accept_args: '-A -u exports --recursive -t 10000 ./test/accept/',
+    unit: ['env NODE_PATH=.:./lib <%= _test_runner %> <%= _unit_args %>/fh3/',
+      'env NODE_PATH=.:./lib <%= _test_runner %> <%= _unit_args %>/legacy/'],
     accept: 'env NODE_PATH=.:./lib <%= _test_runner %> <%= _accept_args %>',
+    unit_single: ['<%= _test_runner %> <%= _unit_args %>/**/<%= unit_test_filename %> --grep=<%= unit_test_param1 %>'],
     unit_cover: 'istanbul cover --dir cov-unit <%= _test_runner %> -- <%= _unit_args %>',
     accept_cover: 'istanbul cover --dir cov-unit <%= _test_runner %> -- <%= _accept_args %>',
 
@@ -27,7 +28,7 @@ module.exports = function(grunt) {
       'cp -rf doc/fh3/ ../fh-doxy/public/dev_tools/fhc/',
       'cp -rf doc/common/ ../fh-doxy/public/dev_tools/fhc/',
       'cp -rf doc/fhc/ ../fh-doxy/public/dev_tools/fhc/',
-      'cp doc/index.md ../fh-doxy/public/dev_tools/fhc.md',
+      'cp doc/index.md ../fh-doxy/public/dev_tools/fhc.md'
     ]
   });
 
